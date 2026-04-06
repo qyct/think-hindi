@@ -18,6 +18,7 @@ class HindiWordsApp {
         this.copyPromptBtn = document.getElementById('copyPromptBtn');
         this.wordsContainer = document.getElementById('wordsContainer');
         this.promptText = document.getElementById('promptText');
+        this.wordCountBadge = document.getElementById('wordCountBadge');
     }
 
     bindEvents() {
@@ -35,7 +36,6 @@ class HindiWordsApp {
 
     async loadAllWords() {
         try {
-            // Load words from the merged word file
             const response = await fetch('thraw/thraw.txt');
 
             if (!response.ok) {
@@ -45,16 +45,20 @@ class HindiWordsApp {
             const text = await response.text();
             this.allWords = text.split('\n').map(word => word.trim()).filter(word => word.length > 0);
 
+            if (this.wordCountBadge) {
+                this.wordCountBadge.textContent = `${this.allWords.length.toLocaleString()} words`;
+            }
+
             console.log(`Loaded ${this.allWords.length} unique Hindi words`);
         } catch (error) {
             console.error('Error loading words:', error);
-            this.wordsContainer.innerHTML = '<div class="error">Failed to load words. Please refresh the page.</div>';
+            this.wordsContainer.innerHTML = '<div class="error-msg">Failed to load words. Please refresh the page.</div>';
         }
     }
 
     displayRandomWords() {
         if (this.allWords.length === 0) {
-            this.wordsContainer.innerHTML = '<div class="error">No words loaded yet. Please wait.</div>';
+            this.wordsContainer.innerHTML = '<div class="error-msg">No words loaded yet. Please wait.</div>';
             return;
         }
 
@@ -90,7 +94,6 @@ class HindiWordsApp {
             return;
         }
 
-        // Get the text from the editable textarea
         const promptText = this.promptText.value;
 
         if (!promptText.trim()) {
@@ -99,7 +102,7 @@ class HindiWordsApp {
         }
 
         navigator.clipboard.writeText(promptText).then(() => {
-            this.showCopyFeedback(this.copyPromptBtn, 'Prompt copied!', true);
+            this.showCopyFeedback(this.copyPromptBtn, 'Copied!', true);
         }).catch(err => {
             console.error('Failed to copy:', err);
             this.showCopyFeedback(this.copyPromptBtn, 'Failed', false);
@@ -107,35 +110,39 @@ class HindiWordsApp {
     }
 
     showCopyFeedback(button, message, success) {
-        const originalText = button.innerHTML;
-        button.innerHTML = `<span>${success ? '✓' : '✗'}</span> ${message}`;
+        const originalHTML = button.innerHTML;
+        const icon = success
+            ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+            : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+
+        button.innerHTML = `${icon} ${message}`;
         button.classList.add(success ? 'success' : 'error');
 
         setTimeout(() => {
-            button.innerHTML = originalText;
+            button.innerHTML = originalHTML;
             button.classList.remove('success', 'error');
         }, 2000);
     }
 
     generateLearningPrompt(words) {
         const wordList = words.join(', ');
-        return `[Your Hindi words here] — ${wordList}
+        return `${wordList}
 
 Using only these words, create meaningful sentences in Hindi that help me understand their usage in everyday conversation. Explain the meaning of each sentence in English, highlight grammar points, and suggest alternative ways to use these words naturally. Make it engaging, beginner-friendly, and progressively build complexity so I can practice speaking, reading, and writing Hindi.`;
     }
 
     renderWords() {
         if (this.currentWords.length === 0) {
-            this.wordsContainer.innerHTML = '<div class="placeholder">Click "Random Words" to display Hindi words</div>';
+            this.wordsContainer.innerHTML = '<div class="placeholder">Draw words to begin</div>';
+            this.wordsContainer.classList.remove('has-words');
             this.promptText.value = '';
             return;
         }
 
-        // Display words as comma-separated
         const wordsText = this.currentWords.join(', ');
         this.wordsContainer.innerHTML = `<div class="words-text">${this.escapeHtml(wordsText)}</div>`;
+        this.wordsContainer.classList.add('has-words');
 
-        // Generate and update learning prompt
         const learningPrompt = this.generateLearningPrompt(this.currentWords);
         this.promptText.value = learningPrompt;
     }
@@ -147,7 +154,6 @@ Using only these words, create meaningful sentences in Hindi that help me unders
     }
 }
 
-// Initialize the app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     new HindiWordsApp();
 });

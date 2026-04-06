@@ -9,39 +9,48 @@
 <body>
     <div class="container">
         <header>
-            <h1>हिंदी शब्द संग्रह</h1>
-            <span class="subtitle">Word Collection</span>
+            <div class="header-left">
+                <h1>हिंदी शब्द संग्रह</h1>
+                <span class="subtitle">Word Collection</span>
+            </div>
+            <div class="word-count-badge" id="wordCountBadge"></div>
         </header>
 
-        <main>
-            <div class="controls">
-                <div class="input-group">
-                    <label for="wordCount">Count</label>
-                    <input type="number" id="wordCount" min="1" max="100" value="40">
-                </div>
+        <div class="controls">
+            <div class="input-group">
+                <label for="wordCount">Words</label>
+                <input type="number" id="wordCount" min="1" max="100" value="40">
+            </div>
 
+            <div class="btn-group">
                 <button id="randomBtn" class="btn-primary">
-                    <span>🎲</span> Generate
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/><path d="m18 2 4 4-4 4"/><path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"/><path d="m18 14 4 4-4 4"/><path d="M21.8 18H18c-1.3 0-2.5-.6-3.3-1.7l-.1-.1"/></svg>
+                    Draw
                 </button>
 
                 <button id="copyBtn" class="btn-secondary">
-                    <span>📋</span> Copy
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                    Copy Words
                 </button>
 
                 <button id="copyPromptBtn" class="btn-secondary">
-                    <span>💬</span> Copy with Prompt
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    Copy Prompt
                 </button>
             </div>
+        </div>
 
-            <div id="wordsContainer" class="words-container">
-                <div class="placeholder">Click Generate to display Hindi words</div>
-            </div>
+        <div id="wordsContainer" class="words-container">
+            <div class="placeholder">Draw words to begin</div>
+        </div>
 
-            <div class="prompt-section">
+        <div class="prompt-section">
+            <div class="prompt-header">
                 <label for="promptText">Learning Prompt</label>
-                <textarea id="promptText" placeholder="Generate words to create a learning prompt..."></textarea>
+                <span class="prompt-hint">Editable — paste directly into any AI chat</span>
             </div>
-        </main>
+            <textarea id="promptText" placeholder="Draw words above to generate your learning prompt…"></textarea>
+        </div>
     </div>
 
     <script src="app.js"></script>
