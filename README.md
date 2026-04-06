@@ -40,10 +40,11 @@ think_hindi/
 ├── thraw/                   # Compiled Hindi word file
 │   └── thraw.txt            # 48,814 unique Hindi words
 ├── scripts/                 # Core utilities
-│   ├── word_utils.py        # Word processing utilities
-│   ├── fetchers.py          # Data fetching functions
+│   ├── wordutils.py        # Word processing utilities
+│   ├── fetchwords.py        # Data fetching functions
 │   ├── sources.json         # Source data with metadata
-│   ├── advanced_compile.py  # Advanced compilation (reference)
+│   ├── cleanviram.py        # Purna viram removal script
+│   ├── advancedcompile.py   # Advanced compilation (reference)
 │   └── temp/                # Temporary downloads (gitignored)
 └── .gitignore               # Git ignore rules
 ```
