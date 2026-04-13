@@ -114,6 +114,7 @@ header h1 {
     align-items: center;
     gap: 12px;
     flex-shrink: 0;
+    flex-wrap: wrap;
 }
 
 .input-group {
@@ -127,6 +128,11 @@ header h1 {
     height: 44px;
     transition: border-color 0.2s, box-shadow 0.2s;
     flex-shrink: 0;
+}
+
+.input-group.wide {
+    flex: 1;
+    min-width: 200px;
 }
 
 .input-group:focus-within {
@@ -144,7 +150,7 @@ header h1 {
     user-select: none;
 }
 
-.input-group input {
+.input-group input[type="number"] {
     background: transparent;
     border: none;
     outline: none;
@@ -154,6 +160,52 @@ header h1 {
     color: var(--text);
     width: 48px;
     text-align: right;
+}
+
+.levels-grid {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.level-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    cursor: pointer;
+    user-select: none;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    transition: background 0.15s;
+}
+
+.level-checkbox:hover {
+    background: var(--accent-soft);
+    color: var(--text);
+}
+
+.level-checkbox input {
+    cursor: pointer;
+    width: auto;
+}
+
+.combine-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    cursor: pointer;
+    user-select: none;
+}
+
+.combine-checkbox input {
+    cursor: pointer;
+    width: auto;
 }
 
 .input-group input::-webkit-inner-spin-button,

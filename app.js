@@ -19,6 +19,8 @@ class HindiWordsApp {
         this.wordsContainer = document.getElementById('wordsContainer');
         this.promptText = document.getElementById('promptText');
         this.wordCountBadge = document.getElementById('wordCountBadge');
+        this.combineLevelsCheckbox = document.getElementById('combineLevels');
+        this.levelCheckboxes = document.querySelectorAll('.level-checkbox input');
     }
 
     bindEvents() {
@@ -26,6 +28,12 @@ class HindiWordsApp {
         this.copyBtn.addEventListener('click', () => this.copyToClipboard());
         this.copyPromptBtn.addEventListener('click', () => this.copyPromptToClipboard());
         this.wordCountInput.addEventListener('change', () => this.validateInput());
+
+        // Reload words when level selection changes
+        this.levelCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => this.loadAllWords());
+        });
+        this.combineLevelsCheckbox.addEventListener('change', () => this.loadAllWords());
     }
 
     validateInput() {
@@ -36,23 +44,69 @@ class HindiWordsApp {
 
     async loadAllWords() {
         try {
-            const response = await fetch('thraw/thraw.txt');
+            const selectedLevels = Array.from(this.levelCheckboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
 
-            if (!response.ok) {
-                throw new Error('Failed to load words');
+            if (selectedLevels.length === 0) {
+                this.allWords = [];
+                this.updateWordCountBadge();
+                console.log('No levels selected');
+                return;
             }
 
-            const text = await response.text();
-            this.allWords = text.split('\n').map(word => word.trim()).filter(word => word.length > 0);
+            const combineLevels = this.combineLevelsCheckbox.checked;
+            let allLoadedWords = [];
 
-            if (this.wordCountBadge) {
-                this.wordCountBadge.textContent = `${this.allWords.length.toLocaleString()} words`;
+            // Load words from each selected level
+            for (const level of selectedLevels) {
+                const url = `https://qyct.github.io/freq-hindi/words/hw${level}.txt`;
+                const words = await this.fetchLevelWords(url, level, combineLevels ? null : selectedLevels.indexOf(level));
+                allLoadedWords = allLoadedWords.concat(words);
             }
 
-            console.log(`Loaded ${this.allWords.length} unique Hindi words`);
+            this.allWords = allLoadedWords;
+            this.updateWordCountBadge();
+
+            console.log(`Loaded ${this.allWords.length} Hindi words from ${selectedLevels.length} level(s)`);
         } catch (error) {
             console.error('Error loading words:', error);
             this.wordsContainer.innerHTML = '<div class="error-msg">Failed to load words. Please refresh the page.</div>';
+        }
+    }
+
+    async fetchLevelWords(url, level, levelIndex) {
+        try {
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error(`Failed to load level ${level}`);
+            }
+
+            const text = await response.text();
+            const lines = text.split('\n').filter(line => line.trim().length > 0);
+
+            // Parse word,frequency format
+            const wordsWithFreq = lines.map(line => {
+                const parts = line.split(',');
+                return parts[0].trim();
+            }).filter(word => word.length > 0);
+
+            // Level 01: only first 1000 words (unless combining)
+            if (level === '01' && levelIndex === 0) {
+                return wordsWithFreq.slice(0, 1000);
+            }
+
+            return wordsWithFreq;
+        } catch (error) {
+            console.error(`Error fetching level ${level}:`, error);
+            return [];
+        }
+    }
+
+    updateWordCountBadge() {
+        if (this.wordCountBadge) {
+            this.wordCountBadge.textContent = `${this.allWords.length.toLocaleString()} words`;
         }
     }
 
