@@ -616,7 +616,7 @@ class HindiWordsApp {
         const safe = this.currentWords.map(w => { const d = document.createElement('div'); d.textContent = w; return d.innerHTML; }).join(', ');
         this.wordsInner.innerHTML = `<span class="words-text">${safe}</span>`;
         this.wordsContainer.classList.add('active');
-        this.promptText.value = `${this.currentWords.join(', ')}\n\nUsing these words, create meaningful paragraphs in Hindi with around 30 words, each can have multiple sentences, that help understand their usage in everyday conversations. Explain the meaning of each sentence of paragraphs in English, highlight grammar points, and suggest alternative ways to use these words naturally. Make it engaging so that one can practice speaking, reading, and writing Hindi.`;
+        this.promptText.value = `${this.currentWords.join(', ')}\n\nFor each of these words, give english meanings first, then give two sentences in about 20 words for each word in hindi, that help understand their usage in everyday conversations. After each sentence, give english meanings for each of the hindi words in the formed sentences without changing the order, comma separated.`;
     }
 
     copyToClipboard() {
