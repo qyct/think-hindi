@@ -1,27 +1,70 @@
 # हिंदी शब्द संग्रह | Hindi Words Collection
 
-A simple web application for learning Hindi words through frequency-based vocabulary practice.
+A comprehensive Hindi learning toolkit combining a **web-based vocabulary practice app** with a **Python corpus processing pipeline** for generating frequency-ordered Hindi word datasets.
 
-## Features
+## 🌟 Features
 
+### Web Application (`index.html`)
 - 🎲 **Random Word Selection**: Generate random Hindi words from frequency-ordered datasets
 - 🔢 **Dual Input Control**: 
   - **Words to Draw**: Number of words to randomly select (default: 50)
   - **FROM MOST FREQ**: Total words to load from most frequent (range: 500-30,000)
 - 📊 **Frequency-Based Learning**: Words organized by usage frequency — most common words first
 - 📋 **One-Click Copy**: Copy selected words or learning prompts to clipboard
-- 🌐 **Modern Dark Theme**: Beautiful, responsive UI with gradient accents
+- 🌐 **Modern Design**: Beautiful, responsive UI with warm color palette
 - ⚡ **Fast & Lightweight**: Pure HTML/CSS/JS, no dependencies
 - 📱 **Mobile Friendly**: Works seamlessly on desktop and mobile devices
 
-## Quick Start
+### Corpus Processing Pipeline (`main.py`)
+- 🔄 **Multi-Source Processing**: Downloads from Wikipedia, Leipzig corpora, HuggingFace, GitHub
+- 📈 **Frequency Analysis**: Generates comprehensive word frequency statistics
+- 🧹 **Text Cleaning**: Removes punctuation, non-Hindi characters, and normalizes text
+- 💾 **Resume Support**: Checkpoint system for interrupted processing
+- 📊 **Top 30K Words**: Pre-processed files ready for web app
 
+## 🚀 Quick Start
+
+### Web Application
 Simply open `index.html` in your web browser. No build process or dependencies required!
 
-## How It Works
+### Corpus Processing
+```bash
+# Install dependencies
+pip install requests beautifulsoup4 pyarrow datasets
 
-### Word Data Structure
+# Run full pipeline (download + extract + process)
+python main.py
 
+# Or generate top 30,000 split files
+python src/split_top_words.py
+```
+
+## 📁 Project Structure
+
+```
+r_think_hindi/
+├── index.html              # Self-contained web app
+├── main.py                 # Corpus processing entry point
+├── favicon.svg            # Site icon
+├── README.md              # This file
+├── .gitignore             # Git ignore rules
+├── src/                   # Processing modules
+│   ├── sources.py        # Data source URLs
+│   ├── downloader.py     # File downloaders
+│   ├── extractor.py      # Archive extractors
+│   ├── processor.py      # Text processing
+│   └── split_top_words.py # Word splitting utilities
+└── words/                 # Frequency-ordered word files
+    ├── hw01.txt          # Words 1-3,000 (most common)
+    ├── hw02.txt          # Words 3,001-6,000
+    └── ...               # ... hw10.txt (words 27,001-30,000)
+```
+
+## 🎯 How It Works
+
+### Web Application
+
+**Word Data Structure**
 The app fetches Hindi words from GitHub-hosted files, each containing 3,000 words in frequency order:
 
 ```
@@ -32,17 +75,11 @@ hw03.txt → Words 6,001-9,000
 hw10.txt → Words 27,001-30,000 (least common)
 ```
 
-### Input Controls
+**Input Controls**
+- **Words to Draw**: How many words to randomly select (1 to total loaded)
+- **FROM MOST FREQ**: How many total words to load (500 to 30,000)
 
-**Words to Draw**: How many words to randomly select from your loaded pool
-- Default: 50 words
-- Range: 1 to the total words loaded
-
-**FROM MOST FREQ**: How many total words to load (starting from most frequent)
-- Default: 3,000 words
-- Range: 500 to 30,000 words
-
-### Example Usage
+**Example Usage**
 
 | FROM MOST FREQ | Files Loaded | Vocabulary Level | Best For |
 |----------------|--------------|------------------|----------|
@@ -51,80 +88,55 @@ hw10.txt → Words 27,001-30,000 (least common)
 | 10,000 | hw01-hw04.txt | Advanced | Professional/academic |
 | 30,000 | hw01-hw10.txt | Comprehensive | Near-complete vocabulary |
 
-## Using the App
+**Using the App**
+1. Set your parameters with the spinners
+2. Click "Draw" to randomly select words
+3. Copy words or learning prompts to clipboard
+4. Use prompts with AI chatbots for personalized learning
 
-1. **Set your parameters**: Adjust "Words to Draw" and "FROM MOST FREQ"
-2. **Click "Draw"**: Randomly selects words from your specified frequency range
-3. **Copy words**: Click "Copy Words" for comma-separated list
-4. **Copy prompt**: Click "Copy Prompt" for AI-generated learning exercises
+### Corpus Processing Pipeline
 
-The learning prompt creates Hindi paragraphs with your selected words, complete with:
-- Hindi paragraphs (~30 words each)
-- English translations
-- Grammar explanations
-- Alternative usage examples
+**Data Sources**
+- **Wikipedia**: All Hindi articles (1.6 GB extracted)
+- **Leipzig Corpora**: 1M randomized web sentences
+- **HuggingFace**: AI4Bharat Sangraha dataset
+- **GitHub**: Hindi dictionaries and stop words
 
-## Deployment
+**Processing Pipeline**
+1. **Download**: Fetches compressed files from multiple sources
+2. **Extract**: Decompresses .tar.gz, .bz2, .zip files
+3. **Process**: Cleans text, removes non-Hindi characters, counts frequencies
+4. **Split**: Creates top 30,000 words in 10 manageable files
+
+**Text Cleaning**
+- ✅ Removes purna viram (।) and deergha viram (॥)
+- ✅ Removes visarga (ः) character
+- ✅ Only keeps Devanagari Unicode range (0x0900-0x097F)
+- ✅ Splits on whitespace
+- ✅ No length filtering (keeps short words like के, में, है)
+
+## 📊 Current Statistics
+
+- **Total unique words processed**: 3,664,322
+- **Sources**: 5 major Hindi text corpora
+- **Web app vocabulary**: Up to 30,000 frequency-ordered words
+- **Top 20 words**: के, में, और, है, की, को, से, एक, का, किया, पर, ने, भी, लिए, कि, गया, था, यह, वह, हैं
+
+## 🌐 Deployment
 
 ### GitHub Pages
-
-1. **Push to GitHub**:
-   ```bash
-   git add .
-   git commit -m "Your commit message"
-   git push origin main
-   ```
-
-2. **Enable GitHub Pages**:
-   - Go to repository Settings → Pages
-   - Source: Deploy from a branch
-   - Branch: `main`, folder: `/ (root)`
-   - Click Save
-
-3. **Access your site**:
-   ```
-   https://YOUR_USERNAME.github.io/think-hindi/
-   ```
+1. Push to GitHub repository
+2. Enable GitHub Pages in Settings → Pages
+3. Set source to `main` branch, `/ (root)` folder
+4. Access at `https://YOUR_USERNAME.github.io/r_think_hindi/`
 
 ### Other Static Hosting
+Works with Netlify, Vercel, Cloudflare Pages, Surge.sh — simply upload the folder.
 
-Works with any static hosting service:
-- Netlify
-- Vercel
-- Cloudflare Pages
-- Surge.sh
-
-Simply upload the entire folder and set `index.html` as the entry point.
-
-## Browser Compatibility
-
-Works in all modern browsers with JavaScript enabled:
-- Chrome/Edge 90+
-- Firefox 88+
-- Safari 14+
-
-## Project Structure
-
-```
-think-hindi/
-├── index.html       # Self-contained app (HTML + CSS + JS)
-├── favicon.svg     # Site icon
-├── README.md       # This file
-└── .gitignore      # Git ignore rules
-```
-
-## Word Data Source
-
-Words are fetched from: `https://qyct.github.io/freq-hindi/words/`
-
-Based on the [FrequencyWords](https://github.com/hermitdave/FrequencyWords) project — Hindi words ranked by usage frequency in everyday language.
-
-## Customization
+## 🛠️ Customization
 
 ### Adjust Default Values
-
-Edit `index.html` to change defaults:
-
+Edit `index.html`:
 ```html
 <!-- Words to Draw default -->
 <input type="number" id="wordCount" value="50">
@@ -134,26 +146,69 @@ Edit `index.html` to change defaults:
 ```
 
 ### Modify Learning Prompt
+Edit the `renderWords()` method in `<script>` section of `index.html`.
 
-Edit `index.html`, find the `renderWords()` method in the `<script>` section and modify the `this.promptText.value` line.
+### Add New Data Sources
+Edit `src/sources.py` and add to `HindiSources` class:
+```python
+class HindiSources:
+    NEW_SOURCE = DataSource("https://example.com/hindi-corpus.tar.gz", "download")
+```
 
-## Browser Compatibility
+## 🔧 Advanced Processing Options
 
-Requires JavaScript and fetch API support. Works offline after first load (files may be cached).
+```bash
+# Resume from checkpoint
+python main.py --resume
 
-## License
+# Skip download step
+python main.py --skip-download
 
-This project is open source and available under the MIT License.
+# Skip extraction step
+python main.py --skip-extract
 
-## Credits
+# Custom output location
+python main.py --output my_words.txt
+```
 
-- **Word Data**: [FrequencyWords Project](https://github.com/hermitdave/FrequencyWords) by hermitdave
-- **Hosted Files**: [qyct/freq-hindi](https://github.com/qyct/freq-hindi) GitHub repository
+## 💻 Browser Compatibility
+
+Works in all modern browsers with JavaScript enabled:
+- Chrome/Edge 90+
+- Firefox 88+
+- Safari 14+
+
+## 📦 Requirements
+
+**Web Application**: None (pure HTML/CSS/JS)
+
+**Corpus Processing**:
+```bash
+pip install requests beautifulsoup4 pyarrow datasets
+```
+
+## 🤝 Contributing
+
+Contributions welcome! Areas for improvement:
+- Additional data sources for corpus processing
+- Parallel processing for faster performance
+- Word filtering options (min frequency, word length)
+- N-grams (bigrams, trigrams) support
+- Part-of-speech tagging
+
+## 📄 License
+
+This project is open source under the MIT License. Please check licenses of original data sources before commercial use.
+
+## 🙏 Credits
+
+- **Word Data**: [FrequencyWords Project](https://github.com/hermitdave/FrequencyWords)
+- **Corpora**: Wikimedia, Leipzig Corpora, AI4Bharat, various GitHub projects
 
 ---
 
 Made with ❤️ for Hindi language learners
 
-**Last Updated**: 2026-04-15
-**Version**: 4.0 (Single-file edition)
+**Last Updated**: 2026-05-25  
+**Version**: 5.0 (Combined web app + corpus processing)  
 **Total Vocabulary**: Up to 30,000 frequency-ordered Hindi words
