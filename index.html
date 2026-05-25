@@ -559,7 +559,7 @@ class HindiWordsApp {
             const filesNeeded = Math.ceil(requested / 3000);
             let loaded = [];
             for (let i = 1; i <= filesNeeded; i++) {
-                const words = await this.fetchWords(`https://hashtorch.github.io/freq-hindi/words/hw${String(i).padStart(2,'0')}.txt`);
+                const words = await this.fetchWords(`https://hashtorch.github.io/r_think_hindi/words/hw${String(i).padStart(2,'0')}.txt`);
                 loaded = loaded.concat(words);
             }
             this.allWords = loaded.slice(0, requested);
